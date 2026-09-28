@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dulce Tentación - Helados Artesanales</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#FFF9F5]">
+  <div id="header-placeholder"></div>
+
+  <section class="hero-gradient py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="fade-in">
+          <span class="inline-block px-4 py-2 bg-pink-100 text-pink-600 rounded-full text-sm font-medium mb-4">🍦 Desde 1995</span>
+          <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
+            Sabores que <span class="gradient-text">enamoran</span>
+          </h1>
+          <p class="text-lg text-gray-600 mb-8">
+            Descubre nuestra colección de helados artesanales elaborados con ingredientes naturales y mucho amor. Cada cucharada es una experiencia única.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="products.html" class="btn-primary px-8 py-3 text-white rounded-full font-semibold inline-flex items-center gap-2">
+              Ver Productos
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="about.html" class="px-8 py-3 border-2 border-pink-500 text-pink-500 rounded-full font-semibold hover:bg-pink-50 transition-colors">
+              Conócenos
+            </a>
+          </div>
+          <div class="flex items-center gap-8 mt-8">
+            <div>
+              <p class="text-3xl font-bold text-gray-800">50+</p>
+              <p class="text-sm text-gray-500">Sabores</p>
+            </div>
+            <div>
+              <p class="text-3xl font-bold text-gray-800">10K+</p>
+              <p class="text-sm text-gray-500">Clientes felices</p>
+            </div>
+            <div>
+              <p class="text-3xl font-bold text-gray-800">30</p>
+              <p class="text-sm text-gray-500">Años de experiencia</p>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full blur-3xl opacity-30"></div>
+          <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=600&h=600&fit=crop" alt="Helados artesanales" class="relative rounded-3xl shadow-2xl float-animation">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Nuestras Categorías</h2>
+        <p class="text-gray-600">Explora nuestra variedad de sabores para todos los gustos</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6" id="categories-grid"></div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-12">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Más Vendidos</h2>
+          <p class="text-gray-600">Los favoritos de nuestros clientes</p>
+        </div>
+        <a href="products.html" class="hidden md:flex items-center gap-2 text-pink-500 font-medium hover:gap-3 transition-all">
+          Ver todos
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="bestsellers-grid"></div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-3xl p-8 md:p-12 text-white text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">¡Oferta Especial!</h2>
+        <p class="text-lg mb-6 opacity-90">2x1 en helados clásicos todos los martes</p>
+        <a href="products.html" class="inline-block px-8 py-3 bg-white text-pink-500 rounded-full font-semibold hover:shadow-lg transition-all">
+          Aprovechar Oferta
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Productos Destacados</h2>
+        <p class="text-gray-600">Descubre nuestros sabores más exclusivos</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="featured-grid"></div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Lo que dicen nuestros clientes</h2>
+        <p class="text-gray-600">Miles de personas ya disfrutan de nuestros helados</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8" id="testimonials-grid"></div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Suscríbete a nuestro newsletter</h2>
+        <p class="text-gray-600 mb-8">Recibe ofertas exclusivas y novedades directamente en tu correo</p>
+        <form class="flex flex-col sm:flex-row gap-4" onsubmit="event.preventDefault(); showToast('¡Gracias por suscribirte!', 'success');">
+          <input type="email" placeholder="tu@email.com" class="flex-1 px-6 py-3 rounded-full border border-gray-200 focus:border-pink-500 transition-colors" required>
+          <button type="submit" class="btn-primary px-8 py-3 text-white rounded-full font-semibold">
+            Suscribirse
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="data/mock-data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const categories = MOCK_DATA.categories;
+      $('#categories-grid').innerHTML = categories.map(cat => `
+        <a href="products.html?category=${cat.id}" class="group bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all border border-gray-100 hover:border-pink-200 card-hover">
+          <span class="text-4xl mb-3 block group-hover:scale-110 transition-transform">${cat.icon}</span>
+          <h3 class="font-bold text-gray-800 group-hover:text-pink-500 transition-colors">${cat.name}</h3>
+          <p class="text-sm text-gray-500 mt-1">${cat.description}</p>
+        </a>
+      `).join('');
+
+      Products.renderGrid(Products.getBestSellers(), 'bestsellers-grid');
+      Products.renderGrid(Products.getFeatured(), 'featured-grid');
+
+      const testimonials = MOCK_DATA.testimonials;
+      $('#testimonials-grid').innerHTML = testimonials.map(t => `
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-1 mb-4">
+            ${generateStars(t.rating)}
+          </div>
+          <p class="text-gray-600 mb-4 italic">"${t.text}"</p>
+          <div class="flex items-center gap-3">
+            <img src="${t.avatar}" alt="${t.name}" class="w-12 h-12 rounded-full object-cover">
+            <div>
+              <p class="font-semibold text-gray-800">${t.name}</p>
+              <p class="text-sm text-gray-500">Cliente verificado</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

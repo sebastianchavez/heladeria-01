@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Pedido - Dulce Tentación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#FFF9F5]">
+  <div id="header-placeholder"></div>
+
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8">
+        <a href="profile.html" class="hover:text-pink-500">Mi Perfil</a>
+        <span>/</span>
+        <span class="text-gray-800" id="breadcrumb-id">Pedido</span>
+      </nav>
+      <div id="order-detail-content"></div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="data/mock-data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth()) return;
+
+      const orderId = getUrlParam('id');
+      const user = Auth.getCurrentUser();
+      const order = MOCK_DATA.orders.find(o => o.id === orderId && o.userId === user.id);
+
+      if (!order) {
+        $('#order-detail-content').innerHTML = `
+          <div class="text-center py-16">
+            <span class="text-6xl">🔍</span>
+            <h2 class="text-2xl font-bold text-gray-800 mt-4 mb-2">Pedido no encontrado</h2>
+            <a href="profile.html" class="btn-primary inline-block mt-4 px-6 py-2 text-white rounded-lg">Volver a mis pedidos</a>
+          </div>
+        `;
+        return;
+      }
+
+      $('#breadcrumb-id').textContent = order.id;
+      const shippingMethod = MOCK_DATA.shippingMethods.find(m => m.id === order.shippingMethod);
+      const paymentMethod = MOCK_DATA.paymentMethods.find(m => m.id === order.paymentMethod);
+
+      $('#order-detail-content').innerHTML = `
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="p-6 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800">${order.id}</h1>
+              <p class="text-gray-500">Realizado el ${order.date}</p>
+            </div>
+            ${getStatusBadge(order.status)}
+          </div>
+
+          <div class="p-6">
+            <h2 class="font-bold text-gray-800 mb-4">Productos</h2>
+            <div class="space-y-3 mb-6">
+              ${order.items.map(item => `
+                <div class="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0">
+                  <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover">
+                  <div class="flex-1">
+                    <a href="product-detail.html?id=${item.productId}" class="font-medium text-gray-800 hover:text-pink-500 transition-colors">${item.name}</a>
+                    <p class="text-sm text-gray-500">Cantidad: ${item.quantity} × ${formatPrice(item.price)}</p>
+                  </div>
+                  <span class="font-bold text-gray-800">${formatPrice(item.price * item.quantity)}</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-6 mb-6">
+              <div class="bg-gray-50 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <span>📍</span> Dirección de Envío
+                </h3>
+                <p class="text-sm text-gray-600">${order.shippingAddress.name || user.name}</p>
+                <p class="text-sm text-gray-600">${order.shippingAddress.street}</p>
+                <p class="text-sm text-gray-600">${order.shippingAddress.city}, ${order.shippingAddress.state}</p>
+                <p class="text-sm text-gray-600">CP: ${order.shippingAddress.zipCode}</p>
+                <p class="text-sm text-gray-600">Tel: ${order.shippingAddress.phone || user.phone || 'N/A'}</p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <span>🚚</span> Método de Envío
+                </h3>
+                <p class="text-sm text-gray-600">${shippingMethod ? shippingMethod.icon + ' ' + shippingMethod.name : 'Estándar'}</p>
+                <p class="text-sm text-gray-600">${shippingMethod ? shippingMethod.description : '3-5 días hábiles'}</p>
+                <h3 class="font-bold text-gray-800 mb-2 mt-4 flex items-center gap-2">
+                  <span>💳</span> Medio de Pago
+                </h3>
+                <p class="text-sm text-gray-600">${paymentMethod ? paymentMethod.icon + ' ' + paymentMethod.name : 'Tarjeta'}</p>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-4 space-y-2">
+              <div class="flex justify-between text-gray-600">
+                <span>Subtotal</span>
+                <span>${formatPrice(order.subtotal)}</span>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <span>Envío</span>
+                <span>${order.shipping === 0 ? 'Gratis' : formatPrice(order.shipping)}</span>
+              </div>
+              <div class="flex justify-between font-bold text-xl text-gray-800 pt-2 border-t border-gray-200">
+                <span>Total</span>
+                <span>${formatPrice(order.total)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 border-t border-gray-100 flex flex-wrap gap-4">
+            <a href="profile.html" class="px-6 py-2 border border-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              ← Volver a Pedidos
+            </a>
+            ${order.status === 'delivered' ? `
+              <a href="review.html?orderId=${order.id}" class="btn-primary px-6 py-2 text-white rounded-lg font-medium">
+                Escribir Reseña
+              </a>
+            ` : ''}
+            <button onclick="window.print()" class="px-6 py-2 border border-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors no-print">
+              Imprimir
+            </button>
+          </div>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>

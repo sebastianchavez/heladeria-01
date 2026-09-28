@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos - Dulce Tentación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#FFF9F5]">
+  <div id="header-placeholder"></div>
+
+  <section class="hero-gradient py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">Nuestros Productos</h1>
+      <p class="text-gray-600">Descubre todos nuestros sabores artesanales</p>
+    </div>
+  </section>
+
+  <section class="py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <aside class="lg:w-64 flex-shrink-0">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-20">
+            <h3 class="font-bold text-gray-800 mb-4">Filtros</h3>
+
+            <div class="mb-6">
+              <label class="text-sm font-medium text-gray-700 mb-2 block">Buscar</label>
+              <input type="text" id="search-input" placeholder="Buscar helados..." class="w-full px-4 py-2 rounded-lg border border-gray-200 text-sm">
+            </div>
+
+            <div class="mb-6">
+              <label class="text-sm font-medium text-gray-700 mb-2 block">Categoría</label>
+              <div class="space-y-2" id="category-filters"></div>
+            </div>
+
+            <div class="mb-6">
+              <label class="text-sm font-medium text-gray-700 mb-2 block">Precio</label>
+              <div class="flex gap-2">
+                <input type="number" id="min-price" placeholder="Min" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm">
+                <input type="number" id="max-price" placeholder="Max" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm">
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="text-sm font-medium text-gray-700 mb-2 block">Ordenar por</label>
+              <select id="sort-select" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm">
+                <option value="">Relevancia</option>
+                <option value="price_asc">Precio: Menor a Mayor</option>
+                <option value="price_desc">Precio: Mayor a Menor</option>
+                <option value="rating">Mejor Valorados</option>
+                <option value="name">Nombre A-Z</option>
+              </select>
+            </div>
+
+            <button onclick="applyFilters()" class="w-full btn-primary text-white py-2 rounded-lg font-medium">
+              Aplicar Filtros
+            </button>
+            <button onclick="clearFilters()" class="w-full mt-2 text-gray-500 py-2 rounded-lg font-medium hover:text-pink-500 transition-colors">
+              Limpiar Filtros
+            </button>
+          </div>
+        </aside>
+
+        <div class="flex-1">
+          <div class="flex items-center justify-between mb-6">
+            <p class="text-gray-600"><span id="product-count">0</span> productos encontrados</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="data/mock-data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+    let currentFilters = { category: 'all', sort: '', search: '', minPrice: '', maxPrice: '' };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const categories = MOCK_DATA.categories;
+      $('#category-filters').innerHTML = `
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="category" value="all" checked onchange="currentFilters.category='all'" class="text-pink-500">
+          <span class="text-sm text-gray-700">Todas</span>
+        </label>
+        ${categories.map(cat => `
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="category" value="${cat.id}" onchange="currentFilters.category='${cat.id}'" class="text-pink-500">
+            <span class="text-sm text-gray-700">${cat.icon} ${cat.name}</span>
+          </label>
+        `).join('')}
+      `;
+
+      const urlCategory = getUrlParam('category');
+      if (urlCategory) {
+        currentFilters.category = urlCategory;
+        const radio = document.querySelector(`input[name="category"][value="${urlCategory}"]`);
+        if (radio) radio.checked = true;
+      }
+
+      applyFilters();
+
+      $('#search-input').addEventListener('input', debounce(() => {
+        currentFilters.search = $('#search-input').value;
+        applyFilters();
+      }, 300));
+
+      $('#sort-select').addEventListener('change', () => {
+        currentFilters.sort = $('#sort-select').value;
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      currentFilters.minPrice = $('#min-price').value;
+      currentFilters.maxPrice = $('#max-price').value;
+
+      const products = Products.filter(currentFilters);
+      Products.renderGrid(products, 'products-grid');
+      $('#product-count').textContent = products.length;
+    }
+
+    function clearFilters() {
+      currentFilters = { category: 'all', sort: '', search: '', minPrice: '', maxPrice: '' };
+      $('#search-input').value = '';
+      $('#min-price').value = '';
+      $('#max-price').value = '';
+      $('#sort-select').value = '';
+      document.querySelector('input[name="category"][value="all"]').checked = true;
+      applyFilters();
+    }
+  </script>
+</body>
+</html>

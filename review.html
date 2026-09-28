@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escribir Reseña - Dulce Tentación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-[#FFF9F5]">
+  <div id="header-placeholder"></div>
+
+  <section class="py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8">
+        <a href="profile.html" class="hover:text-pink-500">Mi Perfil</a>
+        <span>/</span>
+        <span class="text-gray-800">Escribir Reseña</span>
+      </nav>
+
+      <div id="review-content"></div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="data/mock-data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+    let selectedRating = 0;
+    let selectedProductId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth()) return;
+
+      const orderId = getUrlParam('orderId');
+      const productId = getUrlParam('productId');
+      const user = Auth.getCurrentUser();
+      const order = MOCK_DATA.orders.find(o => o.id === orderId && o.userId === user.id);
+
+      if (!order) {
+        $('#review-content').innerHTML = `
+          <div class="text-center py-16">
+            <span class="text-6xl">🔍</span>
+            <h2 class="text-2xl font-bold text-gray-800 mt-4 mb-2">Pedido no encontrado</h2>
+            <a href="profile.html" class="btn-primary inline-block mt-4 px-6 py-2 text-white rounded-lg">Volver a mis pedidos</a>
+          </div>
+        `;
+        return;
+      }
+
+      if (productId) {
+        selectedProductId = parseInt(productId);
+      }
+
+      $('#review-content').innerHTML = `
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h1 class="text-2xl font-bold text-gray-800 mb-2">Escribir Reseña</h1>
+          <p class="text-gray-500 mb-6">Pedido: ${order.id}</p>
+
+          ${order.items.length > 1 && !selectedProductId ? `
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona el producto a reseñar</label>
+              <div class="space-y-2" id="product-selector">
+                ${order.items.map(item => `
+                  <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-colors border-gray-200 hover:border-pink-300">
+                    <input type="radio" name="review-product" value="${item.productId}" class="text-pink-500" onchange="selectProduct(${item.productId})">
+                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-lg object-cover">
+                    <span class="font-medium text-gray-800">${item.name}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <div id="review-form" class="${selectedProductId ? '' : 'hidden'}">
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Calificación</label>
+              <div class="flex items-center gap-1" id="star-rating">
+                ${[1,2,3,4,5].map(i => `
+                  <button type="button" class="star-btn text-4xl cursor-pointer transition-transform hover:scale-125 text-gray-300" data-rating="${i}">★</button>
+                `).join('')}
+              </div>
+              <p class="text-sm text-gray-500 mt-1" id="rating-text">Selecciona una calificación</p>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Título de tu reseña</label>
+              <input type="text" id="review-title" placeholder="Ej: ¡Delicioso!" class="w-full px-4 py-2 rounded-lg border border-gray-200">
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tu comentario</label>
+              <textarea id="review-comment" rows="4" placeholder="Cuéntanos tu experiencia con este producto..." class="w-full px-4 py-2 rounded-lg border border-gray-200 resize-none"></textarea>
+            </div>
+
+            <button onclick="submitReview()" class="btn-primary w-full py-3 text-white rounded-lg font-semibold">
+              Enviar Reseña
+            </button>
+          </div>
+        </div>
+      `;
+
+      if (selectedProductId) {
+        initStarRating();
+      }
+
+      $$('.star-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedRating = parseInt(btn.dataset.rating);
+          updateStars();
+        });
+      });
+    });
+
+    function selectProduct(productId) {
+      selectedProductId = productId;
+      $('#review-form').classList.remove('hidden');
+      initStarRating();
+    }
+
+    function initStarRating() {
+      selectedRating = 0;
+      $$('#star-rating .star-btn').forEach(btn => {
+        btn.classList.remove('text-yellow-400');
+        btn.classList.add('text-gray-300');
+      });
+      $('#rating-text').textContent = 'Selecciona una calificación';
+    }
+
+    function updateStars() {
+      const ratingTexts = ['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'];
+      $$('#star-rating .star-btn').forEach((btn, i) => {
+        btn.classList.toggle('text-yellow-400', i < selectedRating);
+        btn.classList.toggle('text-gray-300', i >= selectedRating);
+      });
+      $('#rating-text').textContent = ratingTexts[selectedRating];
+    }
+
+    function submitReview() {
+      if (selectedRating === 0) {
+        showToast('Por favor selecciona una calificación', 'warning');
+        return;
+      }
+
+      const comment = $('#review-comment').value.trim();
+      const title = $('#review-title').value.trim();
+
+      if (!comment) {
+        showToast('Por favor escribe un comentario', 'warning');
+        return;
+      }
+
+      const user = Auth.getCurrentUser();
+      const fullComment = title ? `${title}: ${comment}` : comment;
+      Products.addReview(selectedProductId, user.id, selectedRating, fullComment);
+
+      showToast('¡Reseña enviada! Gracias por tu opinión', 'success');
+      setTimeout(() => navigateTo('profile.html'), 1500);
+    }
+  </script>
+</body>
+</html>
