@@ -7,7 +7,7 @@ function $$(selector) {
 }
 
 function formatPrice(price) {
-  return `$${price.toFixed(2)} MXN`;
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(Number(price));
 }
 
 function generateStars(rating, interactive = false, productId = null) {
@@ -230,9 +230,9 @@ function initFooter() {
           <div>
             <h4 class="font-bold text-lg mb-4">Contacto</h4>
             <ul class="space-y-3 text-gray-400 text-sm">
-              <li class="flex items-center gap-2">📍 Av. Reforma 123, CDMX</li>
-              <li class="flex items-center gap-2">📞 +52 55 1234 5678</li>
-              <li class="flex items-center gap-2">✉️ hola@dulcetentacion.mx</li>
+              <li class="flex items-center gap-2">📍 Av. Providencia 123, Región Metropolitana</li>
+              <li class="flex items-center gap-2">📞 +56 2 2345 6789</li>
+              <li class="flex items-center gap-2">✉️ hola@dulcetentacion.cl</li>
               <li class="flex items-center gap-2">🕐 Lun-Dom: 10:00 - 22:00</li>
             </ul>
           </div>

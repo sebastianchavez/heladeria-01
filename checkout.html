@@ -6,6 +6,7 @@
   <title>Checkout - Dulce Tentación</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/custom.css">
+<meta name="currency" content="CLP">
 </head>
 <body class="bg-[#FFF9F5]">
   <div id="header-placeholder"></div>
@@ -95,15 +96,15 @@
               <div class="border-t border-gray-200 pt-4 space-y-2">
                 <div class="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span id="summary-subtotal">$0.00</span>
+                  <span id="summary-subtotal">$0</span>
                 </div>
                 <div class="flex justify-between text-gray-600">
                   <span>Envío</span>
-                  <span id="summary-shipping">$0.00</span>
+                  <span id="summary-shipping">$0</span>
                 </div>
                 <div class="border-t border-gray-200 pt-2 flex justify-between font-bold text-lg text-gray-800">
                   <span>Total</span>
-                  <span id="summary-total">$0.00</span>
+                  <span id="summary-total">$0</span>
                 </div>
               </div>
               <button onclick="placeOrder()" class="btn-primary w-full mt-6 py-3 text-white rounded-lg font-semibold">
@@ -251,7 +252,7 @@
           city: $('#ship-city').value,
           state: $('#ship-state').value,
           zipCode: $('#ship-zip').value,
-          country: 'México'
+          country: 'Chile'
         },
         shippingMethod: selectedShipping,
         paymentMethod: selectedPayment
